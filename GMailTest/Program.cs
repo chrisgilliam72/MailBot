@@ -1,6 +1,6 @@
 ﻿using GMailLib;
-using GMailTest;
-using GMailTest.SQLiteModels;
+using MailScan;
+using MailScan.SQLiteModels;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
@@ -44,17 +44,46 @@ namespace GmailQuickstart
             return bodyKeywordsLst;
         }
 
-        //Scaffold-DbContext "Data Source=maildb.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir SQLiteModels  -Force 
+    //Scaffold-DbContext "Data Source=maildb.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir SQLiteModels  -Force 
 
-        static async Task Main(string[] args)
+    static async Task Main(string[] args)
         {
 
             var subjectKeyWords = await GetSubjectKeywords();
             var bodyKeywords = await GetBodyKeywords();
+            var ctx = new maildbContext();
+            using (ctx)
+            {
 
-            var mailMessages =GMail.GetMessages();
-            foreach (var message in mailMessages)
-                Console.WriteLine(message.ToString());
+                var mailMessages = GMail.GetMessages();
+                foreach (var message in mailMessages)
+                {
+                    int subjectRank = message.Rank(subjectKeyWords.Select(x => x.KeyWord).ToList(), message.Subject);
+                    int bodyRank = message.Body != null ? message.Rank(bodyKeywords.Select(x => x.KeyWord).ToList(), message.Body) : 0;
+                    if (subjectRank > 0 || bodyRank > 0)
+                    {
+                        Console.WriteLine("Subject Rank: " + subjectRank + " Body Rank:" + bodyRank);
+                        Console.WriteLine(message.ToString());
+
+                        var mailDetail = new MailDetail()
+                        {
+                            Title = message.Subject,
+                            Date = message.DateReceived,
+                            Body = message.Body,
+                            From = message.From,
+                            MailId = message.ID,
+                            Rank = subjectRank + bodyRank
+
+                        };
+                        ctx.MailDetails.Add(mailDetail);
+                    }
+
+                }
+
+                int results =await ctx.SaveChangesAsync();
+            }
+       
+
             Console.Read();
         }
     }

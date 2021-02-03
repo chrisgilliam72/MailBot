@@ -60,6 +60,7 @@ namespace GMailLib
                 foreach (var email in emailListResponse.Messages)
                 {
                     var gMailMsg = new GMailMessage();
+                    gMailMsg.ID = email.Id;
                     var emailInfoRequest = service.Users.Messages.Get("me", email.Id);
                     var emailInfoResponse = emailInfoRequest.Execute();
                     if (emailInfoResponse.LabelIds.Contains("SENT"))

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace GMailTest.SQLiteModels
+namespace MailScan.SQLiteModels
 {
     public partial class MailDetail
     {
         public long PkId { get; set; }
-        public byte[] MailId { get; set; }
-        public byte[] Date { get; set; }
-        public byte[] Title { get; set; }
-        public byte[] From { get; set; }
+        public String MailId { get; set; }
+        public String Date { get; set; }
+        public String Title { get; set; }
+        public String From { get; set; }
+        public long Rank { get; set; }
+        public String Body { get; set; }
     }
 }

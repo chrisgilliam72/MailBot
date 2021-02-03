@@ -6,6 +6,8 @@ namespace GMailLib
 {
     public class GMailMessage
     {
+
+        public String ID { get; set; }
         public String DateReceived { get; set; }
         public String From { get; set; }
 
@@ -22,12 +24,17 @@ namespace GMailLib
             return "From :" + From + " Subject " + " " + Subject + " Date: " + DateReceived + " Emai: " + EMail;
         }
 
-        public String RankSubject(List<String> keyWords)
+        public int Rank(List<String> keyWords, String rankProperty)
         {
-            foreach (var keyWord in Subject)
+            int rank = 0;
+            var lowerCaseProp = rankProperty.ToLower();
+            foreach (var keyWord in keyWords)
             {
-
+                if (lowerCaseProp.Contains(keyWord.ToLower()))
+                    rank++;
             }
+
+            return rank;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace GMailTest.SQLiteModels
+namespace MailScan.SQLiteModels
 {
     public partial class BlockedAddress
     {

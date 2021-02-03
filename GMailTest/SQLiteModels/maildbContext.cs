@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace GMailTest.SQLiteModels
+namespace MailScan.SQLiteModels
 {
     public partial class maildbContext : DbContext
     {
@@ -25,7 +25,7 @@ namespace GMailTest.SQLiteModels
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var location = Environment.CurrentDirectory;
+             var location = Environment.CurrentDirectory;
 
             if (!optionsBuilder.IsConfigured)
             {
@@ -71,18 +71,31 @@ namespace GMailTest.SQLiteModels
                 entity.HasKey(e => e.PkId);
 
                 entity.Property(e => e.PkId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("pkID");
 
-                entity.Property(e => e.Date).HasColumnType("DATETIME");
+                entity.Property(e => e.Body)
+                    .IsRequired()
+                    .HasColumnType("STRING");
 
-                entity.Property(e => e.From).HasColumnType("STRING");
+                entity.Property(e => e.Date)
+                    .IsRequired()
+                    .HasColumnType("DATETIME");
+
+                entity.Property(e => e.From)
+                    .IsRequired()
+                    .HasColumnType("STRING");
 
                 entity.Property(e => e.MailId)
+                    .IsRequired()
                     .HasColumnType("STRING")
                     .HasColumnName("MailID");
 
-                entity.Property(e => e.Title).HasColumnType("STRING");
+                entity.Property(e => e.Rank).HasColumnType("INT");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnType("STRING");
             });
 
             modelBuilder.Entity<SubjectKeyword>(entity =>

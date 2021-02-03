@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMailTest", "GMailTest\GMailTest.csproj", "{4F32D85A-98B2-41D9-AE0D-FC16C352D011}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailScan", "GMailTest\MailScan.csproj", "{4F32D85A-98B2-41D9-AE0D-FC16C352D011}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMailLib", "GMailLib\GMailLib.csproj", "{540B5F3B-DB90-4F59-868C-2DB75A47BAC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMailLib", "GMailLib\GMailLib.csproj", "{540B5F3B-DB90-4F59-868C-2DB75A47BAC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
