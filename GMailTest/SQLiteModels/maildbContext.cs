@@ -23,6 +23,8 @@ namespace MailScan.SQLiteModels
         public virtual DbSet<MailDetail> MailDetails { get; set; }
         public virtual DbSet<SubjectKeyword> SubjectKeywords { get; set; }
 
+        public virtual DbSet<SMTPSettings> SMTPSettings { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
              var location = Environment.CurrentDirectory;
@@ -36,6 +38,13 @@ namespace MailScan.SQLiteModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<SMTPSettings>(entity =>
+            {
+                entity.HasKey(e => e.pkID);
+
+            });
+
             modelBuilder.Entity<BlockedAddress>(entity =>
             {
                 entity.HasKey(e => e.PkId);

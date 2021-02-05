@@ -2,14 +2,16 @@
 using MailScan.SQLiteModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MailScan.Migrations
 {
     [DbContext(typeof(maildbContext))]
-    partial class maildbContextModelSnapshot : ModelSnapshot
+    [Migration("20210204094426_SMTPSettings")]
+    partial class SMTPSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
