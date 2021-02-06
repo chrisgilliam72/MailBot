@@ -16,15 +16,16 @@ namespace GMailLib
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/gmail-dotnet-quickstart.json
         static string[] Scopes = { GmailService.Scope.GmailReadonly };
-        static string ApplicationName = "Gmail API .NET Quickstart";
-
+        static string ApplicationName = "Mail Scan";
+     
         public static List<GMailMessage> GetMessages()
         {
+            var location = AppDomain.CurrentDomain.BaseDirectory;
             var messageLst = new List<GMailMessage>();
             UserCredential credential;
 
             using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                new FileStream(location+@"/credentials.json", FileMode.Open, FileAccess.Read))
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
                 // automatically when the authorization flow completes for the first time.

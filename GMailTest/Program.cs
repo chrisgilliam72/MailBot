@@ -38,51 +38,57 @@ namespace MailScan
 
     static async Task Main(string[] args)
         {
+            var location = AppDomain.CurrentDomain.BaseDirectory;
+            Console.WriteLine("Working Foler: " + location);
 
-
-            var ctx = new maildbContext();
-            using (ctx)
+            if (File.Exists(location + @"/maildb.db"))
             {
-
-
-                var bodyKeywords = await ctx.BodyKeywords.ToListAsync();
-                var subjectKeyWords = await ctx.SubjectKeywords.ToListAsync();
-                var mailsettings = await ctx.SMTPSettings.FirstOrDefaultAsync();
-                var savedMailIDS = await ctx.MailDetails.Select(x => x.MailId).ToListAsync();
-                var mailMessages = GMail.GetMessages();
-                foreach (var message in mailMessages)
+                var ctx = new maildbContext();
+                using (ctx)
                 {
-                    int subjectRank = message.Rank(subjectKeyWords.Select(x => x.KeyWord).ToList(), message.Subject);
-                    int bodyRank = message.Body != null ? message.Rank(bodyKeywords.Select(x => x.KeyWord).ToList(), message.Body) : 0;
-                    if (subjectRank > 0 || bodyRank > 0)
-                    {
-                        Console.WriteLine("Subject Rank: " + subjectRank + " Body Rank:" + bodyRank);
-                        Console.WriteLine(message.ToString());
-                        var mailhelper = new MailHelper(mailsettings);
-                        mailhelper.SendAsync("Chrisgilliam1972@gmail.com", new List<string>() { new string("chrisgilliam@vodamail.co.za") },
-                            "Re: "+message.Subject
-                            , ComposeEmailBody(message, subjectRank + bodyRank)); 
-                        if (!savedMailIDS.Contains(message.ID))
-                        {
-                            var mailDetail = new MailDetail()
-                            {
-                                Title = message.Subject,
-                                Date = message.DateReceived,
-                                Body = message.Body,
-                                From = message.From,
-                                MailId = message.ID,
-                                Rank = subjectRank + bodyRank
 
-                            };
-                            ctx.MailDetails.Add(mailDetail);
+
+                    var bodyKeywords = await ctx.BodyKeywords.ToListAsync();
+                    var subjectKeyWords = await ctx.SubjectKeywords.ToListAsync();
+                    var mailsettings = await ctx.SMTPSettings.FirstOrDefaultAsync();
+                    var savedMailIDS = await ctx.MailDetails.Select(x => x.MailId).ToListAsync();
+                    var mailMessages = GMail.GetMessages();
+                    foreach (var message in mailMessages)
+                    {
+                        int subjectRank = message.Rank(subjectKeyWords.Select(x => x.KeyWord).ToList(), message.Subject);
+                        int bodyRank = message.Body != null ? message.Rank(bodyKeywords.Select(x => x.KeyWord).ToList(), message.Body) : 0;
+                        if (subjectRank > 0 || bodyRank > 0)
+                        {
+                            Console.WriteLine("Subject Rank: " + subjectRank + " Body Rank:" + bodyRank);
+                            Console.WriteLine(message.ToString());
+                            var mailhelper = new MailHelper(mailsettings);
+                            mailhelper.SendAsync("Chrisgilliam1972@gmail.com", new List<string>() { new string("chrisgilliam@vodamail.co.za") },
+                                "Re: " + message.Subject
+                                , ComposeEmailBody(message, subjectRank + bodyRank));
+                            if (!savedMailIDS.Contains(message.ID))
+                            {
+                                var mailDetail = new MailDetail()
+                                {
+                                    Title = message.Subject,
+                                    Date = message.DateReceived,
+                                    Body = message.Body,
+                                    From = message.From,
+                                    MailId = message.ID,
+                                    Rank = subjectRank + bodyRank
+
+                                };
+                                ctx.MailDetails.Add(mailDetail);
+                            }
+
                         }
 
                     }
 
+                    int results = await ctx.SaveChangesAsync();
                 }
-
-                int results =await ctx.SaveChangesAsync();
             }
+            else
+                throw new FileNotFoundException(location + @"/maildb.db");
        
 
             Console.Read();
