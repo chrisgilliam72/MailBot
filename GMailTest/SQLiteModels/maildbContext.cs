@@ -25,6 +25,8 @@ namespace MailScan.SQLiteModels
 
         public virtual DbSet<SMTPSettings> SMTPSettings { get; set; }
 
+        public virtual DbSet<LogMessage> LogMessages { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var location = AppDomain.CurrentDomain.BaseDirectory;
@@ -38,6 +40,11 @@ namespace MailScan.SQLiteModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<LogMessage>(entity =>
+            {
+                entity.HasKey(e => e.pkID);
+
+            });
 
             modelBuilder.Entity<SMTPSettings>(entity =>
             {
